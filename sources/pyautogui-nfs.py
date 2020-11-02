@@ -12,11 +12,11 @@ print('waiting for 2 seconds...')
 time.sleep(2)
 
 # ВНИМАНИЕ! PyAutoGUI НЕ ЧИТАЕТ В JPG!
-title = './tile86.png'
+title = 'title86.png'
 
 # ВНИМАНИЕ!  У вас, скорее всего, будет другое разрешение!
 # Здесь надо выставить те параметры, которые вы задали в игре.
-window_resolution = (1920, 1080)
+window_resolution = (800, 600)
 
 nfs_window_location = None
 searching_attempt = 1
@@ -44,8 +44,8 @@ top = nfs_window_location[1] + nfs_window_location[3]
 window = (left, top, left + window_resolution[0], top + window_resolution[1])
 
 ranges = {
-    'min_h1': [0, 180],  # Hue - цветовой тон
-    'max_h1': [180, 180],
+    'min_h1': [0, 179],  # Hue - цветовой тон
+    'max_h1': [179, 179],
 
     'min_s': [3, 255],  # Saturation - насыщенность
     'max_s': [17, 255],
@@ -81,16 +81,16 @@ def set_handler_to_koeff(name):
     return handler
 
 
-cv2.namedWindow('result')
+# cv2.namedWindow('controls')
+cv2.namedWindow('controls', cv2.WINDOW_AUTOSIZE)
 
 for name, value in ranges.items():
-    cv2.createTrackbar(name, 'result', 1 if name in ['matrix', 'tresh'] else 0, ranges[name][1],
-                       set_handler_to_trackbar(name))
-    cv2.setTrackbarPos(name, 'result', value[0])
+    cv2.createTrackbar(name, 'controls', 0, ranges[name][1], set_handler_to_trackbar(name))
+    cv2.setTrackbarPos(name, 'controls', value[0])
 
 for name, value in koeff.items():
-    cv2.createTrackbar(name, 'result', value[0], value[1], set_handler_to_koeff(name))
-    cv2.setTrackbarPos(name, 'result', value[2])
+    cv2.createTrackbar(name, 'controls', value[0], value[1], set_handler_to_koeff(name))
+    cv2.setTrackbarPos(name, 'controls', value[2])
 
 
 def getMask(hsv):
@@ -144,9 +144,9 @@ while True:
     result_copy = cv2.cvtColor(result_copy, cv2.COLOR_BGR2GRAY)
 
     # Отрезаем нижнюю часть контура — она только шумит и мешает:
-    result_copy[int(result_copy.shape[0] * 0.75):, :] = 0
+    # result_copy[int(result_copy.shape[0] * 0.75):, :] = 0
     # Скрываем также верхнюю треть — информации там все равно нет:
-    result_copy[:int(result_copy.shape[0] * 0.48), :] = 0
+    # result_copy[:int(result_copy.shape[0] * 0.48), :] = 0
     # Убираем квдрат по центру, где отображаются спидометр-тахометр:
 
     # cv2.circle(result_copy, (result_copy.shape[1] // 2 - 70, result_copy.shape[0] - 100), 45, 0, 55)
