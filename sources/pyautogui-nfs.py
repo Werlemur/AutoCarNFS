@@ -83,6 +83,7 @@ def set_handler_to_koeff(name):
 
 # cv2.namedWindow('controls')
 cv2.namedWindow('controls', cv2.WINDOW_AUTOSIZE)
+cv2.resizeWindow('controls', 800, 400)
 
 for name, value in ranges.items():
     cv2.createTrackbar(name, 'controls', 0, ranges[name][1], set_handler_to_trackbar(name))
@@ -143,10 +144,10 @@ while True:
     result_copy = imutils.resize(result.copy(), width=800)
     result_copy = cv2.cvtColor(result_copy, cv2.COLOR_BGR2GRAY)
 
-    # Отрезаем нижнюю часть контура — она только шумит и мешает:
+    #Отрезаем нижнюю часть контура — она только шумит и мешает:
     # result_copy[int(result_copy.shape[0] * 0.75):, :] = 0
     # Скрываем также верхнюю треть — информации там все равно нет:
-    # result_copy[:int(result_copy.shape[0] * 0.48), :] = 0
+    result_copy[:int(result_copy.shape[0] * 0.48), :] = 0
     # Убираем квдрат по центру, где отображаются спидометр-тахометр:
 
     # cv2.circle(result_copy, (result_copy.shape[1] // 2 - 70, result_copy.shape[0] - 100), 45, 0, 55)
@@ -164,6 +165,7 @@ while True:
 
         # Третий аргумент — это индекс контура, который мы хотим вывести. Мы хотим самый большой.
         # Вывести все можно, передав -1 вместо 0:
+
         cv2.drawContours(result_copy, contours, 0, (255,), 3)
         contour = contours[0]
 
